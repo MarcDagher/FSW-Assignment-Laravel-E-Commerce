@@ -58,4 +58,36 @@ class SellersController extends Controller
             ], 404);
         }
     }
+
+    function delete_product(Request $req){
+        $product = Product::find($req -> product_id);
+        if ($product){
+            // Product::destroy($req -> product_id);
+            $product -> delete();
+            return response() -> json([
+                "status" => "success",
+                "messagde" => "product deleted successfully"
+            ]);
+        } else {
+            return response() -> json([
+                "status" => "failed",
+                "message" => "product not found",
+            ], 404);
+        }
+    }
+
+    function read_my_products(Request $req){
+        echo "hello from read";
+        $exists = Product::where('user_id',$req->user_id)->first(); // return null if empty
+        $products = Product::where('user_id',$req->user_id)->get(); // doesn't returb null if empty
+        if ($exists){
+            echo $products;
+        } else {
+            return response() -> json([
+                "status" => "failed",
+                "message" => "There are no products to display",
+            ], 404);
+        }
+
+    }
 }
