@@ -1,24 +1,20 @@
 <?php
-
 namespace App\Http\Controllers;
 
 // use App\Http\Controllers\Controller;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SellersController extends Controller
 {
-    // 'product_name','description', 'price', 'stock', 'user_id' (user_id should be available from he token)
-    // function check_product ($req) {
-    //     $product_name = DB::table('products')  -> where('product_name', $req -> product_name) -> value('product_name');
-    //     return $product_name;
-    // }
+    // req: 'product_name','description', 'price', 'stock', 'user_id' (user_id should be available from he token)
     
     function create_product (Request $req) {
         $product_name = Product::where('product_name', $req -> product_name) -> value('product_name');
-
+        
         if ($product_name){
             echo "Product name already exists";
         } else {
@@ -29,12 +25,15 @@ class SellersController extends Controller
              'stock' => $req -> stock,
              'user_id' => $req -> user_id,
             ]);
-            echo $req -> product_name . "\n";
-            echo $req -> description . "\n";
-            echo $req -> price . "\n";
-            echo $req -> stock . "\n";
-            echo $req -> user_id . "\n";
-            echo $req -> product_name . " added successfuly";
+
+            return response()->json([
+            'product name' => $req -> product_name . "\n",
+            'request' => $req -> description . "\n",
+            'price' => $req -> price . "\n",
+            'stock' => $req -> stock . "\n",
+            'user id' => $req -> user_id . "\n",
+            'status' => $req -> product_name . " added successfuly",
+            ]);
         }
     }
 
@@ -62,7 +61,6 @@ class SellersController extends Controller
     function delete_product(Request $req){
         $product = Product::find($req -> product_id);
         if ($product){
-            // Product::destroy($req -> product_id);
             $product -> delete();
             return response() -> json([
                 "status" => "success",
@@ -88,6 +86,5 @@ class SellersController extends Controller
                 "message" => "There are no products to display",
             ], 404);
         }
-
     }
 }
